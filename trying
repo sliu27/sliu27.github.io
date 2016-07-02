@@ -1,0 +1,117 @@
+<!--Beginning of most all HTML files-->
+<!DOCTYPE HTML>
+<html>
+
+
+
+<!--The following code is necessary to import essential libraries-->
+<head>
+  <!--THIS IS JUST FOR A PRETTY FONT -->
+  <link href='http://fonts.googleapis.com/css?family=Sintony:400,700' rel='stylesheet' type='text/css'>
+
+  <!--THIS IS NEEDED TO IMPORT FIREBASE LIBRARIES -->
+  <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
+
+  <!--THIS IS NEEDED TO IMPORT JQUERY LIBRARIES -->  
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+</head>
+<!-- ##################################################################################-->
+
+
+
+<!-- The following line are creating the visible components of the to-do-list website.--> 
+
+<body>                                   <!--body = the central portion of our to-do-list website-->
+<div id="banner">                        <!--div = defines a section of the document-->
+  <h1>CR Sales Coffee Orders</h1>              <!--h1 = making a header line-->
+  <div>
+    <label>Name?:</label>                <!--label = the label that precedes the next HTML tag-->
+    <input type='text' id='name'>        <!--input = an empty text box-->
+    <label>Your Order?:</label>
+    <input type='text' id='activity'>
+    <label>When can I pick up your card?:</label>
+    <input type='text' id='activity'>
+  </div>
+  <ul id='example-messages'></ul>        <!--ul = An unordered list-->
+</div>
+<!-- ##################################################################################-->
+
+
+
+
+
+
+
+<!-- The following are JUST FOR MAKING THE WEBSITE PRETTY.  NOT ENTIRELY NECESSARY -->
+<style>                                 /* style = the beginning of CSS code */
+  body{                                 /* body = creates CSS that applies to the entire body of the HTML page */
+    background-color: #000;
+  }
+  #banner                               /* #banner = this references the banner id we created on line 24 */
+  {
+    width:500px;
+    height:200px;
+    text-align:center;
+    background-repeat:no-repeat;
+    border-radius:5px;
+    margin:90px auto auto;
+    padding:80px 0;
+    font-family:Arial, sans-serif;
+    text-shadow:2px 0 15px #292929;
+    letter-spacing:4px;
+    text-decoration:none;
+    color:#DDD;
+  }
+  #example-messages{                   /* #example-messages = this references the example-messages id we created on line 32 */
+    background-color: #808090;
+    text-align: left;
+  }
+</style>
+<!-- ##################################################################################-->
+
+
+
+<!-- The following is the code that actually matters.  This is the Javascript that pushes and gets information to our database -->
+<script>
+  // Creates a variable called databaseLink that links to our database.
+  var databaseLink = new Firebase('https://dbcrSTintern.firebaseio.com/');  
+  // Create javascript variables that link our previous HTML IDs.  Remember, we can't use regular HTML inside a script tag, so we need to use JQuery to reference any previous HTML.  A $ means we are using JQuery
+  var messageField = $('#activity');
+  var nameField = $('#name');
+  var messageList = $('#example-messages');
+  // If the enter key is pressed, push the values in the text boxes to our database.
+  messageField.keypress(function (e) {
+    if (e.keyCode == 13) {                            //13 is the enter key's keycode
+      if (messageField.val() == ""){                  //Ensure that an activity was entered.
+        alert("Please fill in your activity");
+      }else{
+        //push data to firebase and then clear the text box
+        databaseLink.push({name:nameField.val(), text:messageField.val()});
+        messageField.val('');
+      }
+    }
+  });//end of keypress function
+  // Retrieve information from our database to update the to-do list.
+  databaseLink.limitToLast(100).on('child_added', function (snapshot) {
+    //GET DATA
+    var data = snapshot.val();
+      //If there was no inputted name, return Random 196 student, else return the name that was typed.
+      if (data.name == ""){
+        var name = "Random 196 student: ";
+      }else{
+        var name = data.name + ": ";
+      }
+      var activity = data.text;
+      //Convert the data we received from our database into tagged HTML objects.
+      var messageElement = $("<p>"); //p = new paragraph
+      var nameElement = $("<strong class='example-chat-name'></strong>");
+      nameElement.text(name);
+      messageElement.text(activity).prepend(nameElement);
+      //Update HTML with entries from the database.
+      messageList.append(messageElement);
+      //SCROLL TO BOTTOM OF MESSAGE LIST
+      messageList[0].scrollTop = messageList[0].scrollHeight;
+  });
+</script>
+</body>
+</html>
