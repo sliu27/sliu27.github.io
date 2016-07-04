@@ -80,10 +80,10 @@
   var messageList = $('#example-messages');
   
   // If the enter key is pressed, push the values in the text boxes to our database.
-  orderField.keypress(function (e) {
+  timeField.keypress(function (e) {
     if (e.keyCode == 13) {                            //13 is the enter key's keycode
-      if (orderField.val() == ""){                  //Ensure that an activity was entered.
-        alert("Please fill in your order");
+      if (orderField.val() == "" || timeField.val() == "" || nameField.val() == ""){                  //Ensure that an activity was entered.
+        alert("Please fill in all fields");
       }else{
         //push data to firebase and then clear the text box
         databaseLink.push({name:nameField.val(), text:orderField.val(), time:timeField.val()});
@@ -102,14 +102,9 @@
     
     
       //If there was no inputted name, return Random 196 student, else return the name that was typed.
-      if (data.name == ""){
-        var name = "Some desk member: ";
-        
-      }else{
-        var name = data.name + ": ";
-      }
+      var name = data.name + ": ";
       var order = data.text;
-      var time = data.time;
+      var time = "card/cash pickup time:" + data.time;
       
       //Convert the data we received from our database into tagged HTML objects.
       var messageElement = $("<p>"); //p = new paragraph
