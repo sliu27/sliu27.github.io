@@ -28,9 +28,9 @@
     <label>Name?:</label>                <!--label = the label that precedes the next HTML tag-->
     <input type='text' id='name'>        <!--input = an empty text box-->
     <label>Your Order?:</label>
-    <input type='text' id='activity'>
+    <input type='text' id='order'>
     <label>When can I pick up your card?:</label>
-    <input type='text' id='activity'>
+    <input type='text' id='time'>
   </div>
   <ul id='example-messages'></ul>        <!--ul = An unordered list-->
 </div>
@@ -76,20 +76,21 @@
   // Creates a variable called databaseLink that links to our database.
   var databaseLink = new Firebase('https://intern-coffee-lunch-helper.firebaseio.com/');  
   // Create javascript variables that link our previous HTML IDs.  Remember, we can't use regular HTML inside a script tag, so we need to use JQuery to reference any previous HTML.  A $ means we are using JQuery
-  var messageField = $('#activity');
+  var orderField = $('#order');
   var timeField = $('#time');
   var nameField = $('#name');
   var messageList = $('#example-messages');
   
   // If the enter key is pressed, push the values in the text boxes to our database.
-  messageField.keypress(function (e) {
+  orderField.keypress(function (e) {
     if (e.keyCode == 13) {                            //13 is the enter key's keycode
-      if (messageField.val() == ""){                  //Ensure that an activity was entered.
-        alert("Please fill in your activity");
+      if (orderField.val() == ""){                  //Ensure that an activity was entered.
+        alert("Please fill in your order");
       }else{
         //push data to firebase and then clear the text box
-        databaseLink.push({name:nameField.val(), text:messageField.val()});
-        messageField.val('');
+        databaseLink.push({name:nameField.val(), text:orderField.val(), time:timeField.val()});
+        timeField.val('');
+        orderField.val('');
       }
     }
   });//end of keypress function
@@ -104,21 +105,26 @@
     
       //If there was no inputted name, return Random 196 student, else return the name that was typed.
       if (data.name == ""){
-        var name = "Random 196 student: ";
+        var name = "Some desk member: ";
+        
       }else{
         var name = data.name + ": ";
       }
-      var activity = data.text;
+      var order = data.text;
+      var time = data.time;
       
       //Convert the data we received from our database into tagged HTML objects.
       var messageElement = $("<p>"); //p = new paragraph
+      var message2Element = $("<p>"); //p = new paragraph
       
       var nameElement = $("<strong class='example-chat-name'></strong>");
       nameElement.text(name);
-      messageElement.text(activity).prepend(nameElement);
+      messageElement.text(order).prepend(nameElement);
+      message2Element.text(time).prepend(messageElement);
       
       //Update HTML with entries from the database.
       messageList.append(messageElement);
+      messageList.append(message2Element);
       
       //SCROLL TO BOTTOM OF MESSAGE LIST
       messageList[0].scrollTop = messageList[0].scrollHeight;
