@@ -1,23 +1,13 @@
-<!--Beginning of most all HTML files-->
 <!DOCTYPE HTML>
 <html>
 
-<!--import essential libraries-->
 <head>
-  <!--PRETTY FONT -->
   <link href='http://fonts.googleapis.com/css?family=Sintony:400,700' rel='stylesheet' type='text/css'>
 
-  <!--IMPORT FIREBASE LIBRARIES -->
   <script src="https://cdn.firebase.com/js/client/2.2.1/firebase.js"></script>
 
-  <!--THIS IS NEEDED TO IMPORT JQUERY LIBRARIES -->  
   <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
 </head>
-<!-- ##################################################################################-->
-
-
-
-<!-- The following line are creating the visible components of the to-do-list website.--> 
 
 <body>                                   <!--body = the central portion of our to-do-list website-->
 <div id="banner">                        <!--div = defines a section of the document-->
@@ -69,7 +59,6 @@
 
 
 
-<!-- Javascript that pushes and gets information to our database -->
 <script>
   // Creates a variable called databaseLink that links to our database.
   var databaseLink = new Firebase('https://intern-coffee-lunch-helper.firebaseio.com/');  
@@ -91,22 +80,18 @@
         orderField.val('');
       }
     }
-  });//end of keypress function
+  });//end of keypress
   
-  
-  
-  // Retrieve information from our database to update the to-do list.
+
   databaseLink.limitToLast(100).on('child_added', function (snapshot) {
     //GET DATA
     var data = snapshot.val();
     
-    
-      //If there was no inputted name, return Random 196 student, else return the name that was typed.
+
       var name = data.name + ": ";
       var order = data.text;
       var time = "card/cash pickup time: " + data.time;
-      
-      //Convert the data we received from our database into tagged HTML objects.
+
       var messageElement = $("<p>"); //p = new paragraph
       var message2Element = $("<p>"); //p = new paragraph
       
@@ -114,12 +99,10 @@
       nameElement.text(name);
       messageElement.text(order).prepend(nameElement);
       message2Element.text(time).prepend(messageElement);
-      
-      //Update HTML with entries from the database.
+
       messageList.append(messageElement);
       messageList.append(message2Element);
-      
-      //SCROLL TO BOTTOM OF MESSAGE LIST
+
       messageList[0].scrollTop = messageList[0].scrollHeight;
   });
 </script>
