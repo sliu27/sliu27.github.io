@@ -12,6 +12,8 @@ class Clock extends React.Component {
     this.state = {date: new Date()};
   }
   tick() {
+    /* mostly call this on functions and not state fields*/
+
     this.setState({
       date: new Date()
     });
@@ -31,7 +33,7 @@ class Clock extends React.Component {
     // interval call tick
     return (
     <div>
-      <h1>Hello, world!</h1>
+      <h1>Hello, worldddd!</h1>
       <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
     </div>
   );
